@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-@Component
 
+@Component
 public class JdbcTrasnferDao implements TransferDao {
     private JdbcTemplate jdbcTemplate;
 

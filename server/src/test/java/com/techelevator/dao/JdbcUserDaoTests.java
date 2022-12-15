@@ -12,6 +12,8 @@ import javax.sql.DataSource;
 
 public class JdbcUserDaoTests extends BaseDaoTests{
 
+    private static final User USER_1 = new User();
+
     private JdbcUserDao sut;
 
     @Before
@@ -27,5 +29,7 @@ public class JdbcUserDaoTests extends BaseDaoTests{
         User user = sut.findByUsername("TEST_USER");
         Assert.assertEquals("TEST_USER", user.getUsername());
     }
+
+
 
 }

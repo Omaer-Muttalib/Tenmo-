@@ -3,31 +3,33 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
+@Component
 public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcAccountDao(JdbcTemplate JdbcTemplate) {
+    public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public BigDecimal findBalance(int userId) {
-        BigDecimal balance = null;
+    public double findBalance(int userId) {
+        double balance = 0;
         String sql = "SELECT balance FROM account WHERE user_id =?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         if(result.next()){
-            balance = result.getBigDecimal("balance");
+            balance = result.getDouble("balance");
         }
         return balance;
     }
 
     @Override
-    public BigDecimal addToBalance(BigDecimal amountToAdd, int userId) {
+    public double addToBalance(double amountToAdd, int userId) {
         Account account = new Account();
-        BigDecimal addToBalance = account.getBalance();
+        double addToBalance = account.getBalance();
         String sql = "UPDATE account SET balance WHERE user_id = ? ";
       //todo put try/catch statement here if code doesnt work
         jdbcTemplate.update(sql, amountToAdd, userId);
@@ -35,9 +37,9 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int userId) {
+    public double subtractFromBalance(double amountToSubtract, int userId) {
         Account account = new Account();
-        BigDecimal subtractFromBalance = account.getBalance();
+        double subtractFromBalance = account.getBalance();
         String sql = "UPDATE account SET balance WHERE user_id = ? ";
         //todo put try/catch statement here if code doesnt work
         jdbcTemplate.update(sql, amountToSubtract, userId);
@@ -46,7 +48,7 @@ public class JdbcAccountDao implements AccountDao {
 
     private Account mapToRowSet(SqlRowSet accountRowSet) {
         Account account = new Account();
-        account.setBalance(accountRowSet.getBigDecimal("balance"));
+        account.setBalance(accountRowSet.getDouble("balance"));
         account.setId(accountRowSet.getInt("id"));
         account.setUserId(accountRowSet.getInt("userId"));
 

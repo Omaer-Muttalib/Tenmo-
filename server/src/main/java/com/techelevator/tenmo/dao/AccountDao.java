@@ -3,9 +3,9 @@ package com.techelevator.tenmo.dao;
 import java.math.BigDecimal;
 
 public interface AccountDao {
-    BigDecimal findBalance(int userId);
+    double findBalance(int userId);
 
-    BigDecimal addToBalance(BigDecimal amountToAdd, int userId);
+    double addToBalance(double amountToAdd, int userId);
 
-    BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int userId);
+    double subtractFromBalance(double amountToSubtract, int userId);
 }

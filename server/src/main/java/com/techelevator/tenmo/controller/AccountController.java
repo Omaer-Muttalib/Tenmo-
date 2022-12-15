@@ -1,38 +1,50 @@
 package com.techelevator.tenmo.controller;
 
 import com.techelevator.tenmo.dao.AccountDao;
+import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Account;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
 
 public class AccountController {
     private AccountDao dao;
+    private UserDao userDao;
+    private TransferDao transferDao;
 
-    public AccountController() {
-        this.dao = dao;
+    public AccountController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
+        this.dao = accountDao;
+        this.userDao = userDao;
+        this.transferDao = transferDao;
     }
 
-    @RequestMapping(path = "/balance/{id}", method = RequestMethod.GET)
-    public BigDecimal findBalance(@PathVariable int id) {
-        BigDecimal balance = dao.findBalance(id);
+    @RequestMapping(path = "/balance", method = RequestMethod.GET)
+    public double findBalance(Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.findIdByUsername(username);
+        double balance = dao.findBalance(userId);
         return balance;
     }
 
-    @RequestMapping(path = "/balance/{id}", method = RequestMethod.PUT)
-    public BigDecimal addToBalance(@RequestBody BigDecimal amountToAdd, @PathVariable int id) {
-        BigDecimal updateBalance = dao.addToBalance(amountToAdd, id);
-        return updateBalance;
-    }
+//    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
+//    public double addToBalance(@RequestBody Account account, Principal principal, double amountToAdd) {
+//        String username = principal.getName();
+//        int userId = userDao.findIdByUsername(username);
+//
+//        double updateBalance = userDao.
+//        return updateBalance;
+//    }
 
-    @RequestMapping(path = "/balance/{id}", method = RequestMethod.PUT)
-    public BigDecimal subtractFromBalance(@RequestBody BigDecimal amountToSubtract, @PathVariable int id) {
-        BigDecimal updateBalance = dao.addToBalance(amountToSubtract, id);
-        return updateBalance;
-
-    }
+//    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
+//    public BigDecimal subtractFromBalance(@RequestBody BigDecimal amountToSubtract, @PathVariable int id) {
+//        BigDecimal updateBalance = dao.addToBalance(amountToSubtract, id);
+//        return updateBalance;
+//
+//    }
 }

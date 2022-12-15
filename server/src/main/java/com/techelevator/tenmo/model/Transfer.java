@@ -1,10 +1,13 @@
 package com.techelevator.tenmo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Transfer {
     private int id;
+    @JsonProperty("date_and_time")
     private LocalDate date;
     private int accountId;
     private int fromUser;

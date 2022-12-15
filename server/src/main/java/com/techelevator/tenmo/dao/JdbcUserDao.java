@@ -37,7 +37,7 @@ public class JdbcUserDao implements UserDao {
         List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-        while(results.next()) {
+        while (results.next()) {
             User user = mapRowToUser(results);
             users.add(user);
         }
@@ -48,7 +48,7 @@ public class JdbcUserDao implements UserDao {
     public User findByUsername(String username) throws UsernameNotFoundException {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE username ILIKE ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
-        if (rowSet.next()){
+        if (rowSet.next()) {
             return mapRowToUser(rowSet);
         }
         throw new UsernameNotFoundException("User " + username + " was not found.");
@@ -56,7 +56,8 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean create(String username, String password) {
-
+        boolean userCreated;
+        boolean accountCreated;
         // create user
         String sql = "INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?) RETURNING user_id";
         String password_hash = new BCryptPasswordEncoder().encode(password);
@@ -66,11 +67,17 @@ public class JdbcUserDao implements UserDao {
         } catch (DataAccessException e) {
             return false;
         }
-
         // TODO: Create the account record with initial balance
+        BigDecimal initialBalance = new BigDecimal("1000");
+        String accountSql = "INSERT INTO account (user_id, balance) values(?, ?)";
+       try {
+           Integer newAccountId = jdbcTemplate.update(accountSql, newUserId, initialBalance);
+       }catch (DataAccessException e) {
+           return false;
+       }
 
-        return true;
-    }
+    return true;
+}
 
     private User mapRowToUser(SqlRowSet rs) {
         User user = new User();

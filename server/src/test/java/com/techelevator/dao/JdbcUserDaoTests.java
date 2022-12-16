@@ -13,14 +13,13 @@ import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests{
 
-<<<<<<< HEAD
-    private static final User USER_1 = new User();
-=======
+
+
+
     private static final User USER_1 = new User(1001,"bob", "plantlover", "admin");
     private static final User USER_2 = new User(1002,"john", "jellyfish", "USER");
     private static final User USER_3 = new User(1003,"dave", "waterbottle", "USER");
     private static final User USER_4 = new User(1004,"tom", "monitor", "USER");
->>>>>>> 9d7ef8747180244860d0a3e08d1265cad7c0c93b
 
     private JdbcUserDao sut;
 
@@ -38,10 +37,6 @@ public class JdbcUserDaoTests extends BaseDaoTests{
         Assert.assertEquals("TEST_USER", user.getUsername());
     }
 
-<<<<<<< HEAD
-
-
-=======
     @Test
     public void findAllUsers() {
         List<User> users = sut.findAll();
@@ -68,5 +63,4 @@ public class JdbcUserDaoTests extends BaseDaoTests{
         Assert.assertEquals(expected.getAuthorities(), actual.getAuthorities());
 
     }
->>>>>>> 9d7ef8747180244860d0a3e08d1265cad7c0c93b
 }

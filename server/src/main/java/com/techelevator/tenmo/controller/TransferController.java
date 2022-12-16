@@ -6,10 +6,8 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -23,25 +21,22 @@ public class TransferController {
     private UserDao userDao;
 
     public TransferController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
-        this.dao = dao;
+        this.dao = transferDao;
         this.userDao = userDao;
         this.accountDao = accountDao;
     }
 
-
-    //todo: remove the id endpoint and have it use the dto
-    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
-    public Transfer getTransfer(@PathVariable int id) {
+//    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
+//    public Transfer getTransfer(Principal principal) {
 //        String username = principal.getName();
 //        int userId = userDao.findIdByUsername(username);
-        Transfer transfer = dao.getTransfer(id);
+//        Transfer transfer = dao.getTransfer(userId);
 //        if (username.equals("")) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 //        } else {
 //            return transfer;
 //        }
-        return transfer;
-    }
+//    }
 
 
 //    //todo check to see if we need accountId or not || check the path if its {id} or not
@@ -49,12 +44,16 @@ public class TransferController {
 //    public List<Transfer> getAllTransfer(Principal principal) {
 //        String username = principal.getName();
 //        int userId = userDao.findIdByUsername(username);
-//        return dao.getAllTransfer(userId);
+//        List<Transfer> transfers = dao.getAllTransfer(userId);
+//        return transfers;
 //    }
+    
+
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/transfer")
     public void sendTransfer(@RequestBody Transfer transfer) {
-//        dao.sendTransfer(transfer);
+        dao.sendTransfer(transfer);
     }
 
 

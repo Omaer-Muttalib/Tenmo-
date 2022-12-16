@@ -35,15 +35,11 @@ CREATE TABLE transfer (
 	transfer_id int NOT NULL DEFAULT nextval('seq_transfer_id'),
 	date_and_time timestamp NOT NULL,
 	from_username varchar (50) NOT NULL,
-	from_user_id int NOT NULL,
 	to_username varchar (50) NOT NULL,
-	to_user_id int NOT NULL,
 	transfer_amount numeric NOT NULL,
 	status varchar NOT NULL,
 	CONSTRAINT PK_transfer PRIMARY KEY (transfer_id),
-	CONSTRAINT FK_to_user_id FOREIGN KEY (to_user_id) REFERENCES tenmo_user(user_id),
 	CONSTRAINT FK_to_username FOREIGN KEY (to_username) REFERENCES tenmo_user(username),
-	CONSTRAINT FK_from_user_id FOREIGN KEY (from_user_id) REFERENCES tenmo_user(user_id),
 	CONSTRAINT FK_from_username FOREIGN KEY (from_username) REFERENCES tenmo_user(username)
 	);
 

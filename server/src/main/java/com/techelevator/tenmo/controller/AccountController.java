@@ -26,10 +26,10 @@ public class AccountController {
 
 
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
-    public double findBalance(Principal principal) {
+    public BigDecimal findBalance(Principal principal) {
         String username = principal.getName();
         int userId = userDao.findIdByUsername(username);
-        double balance = dao.findBalance(userId);
+        BigDecimal balance = dao.findBalance(userId);
         return balance;
     }
 

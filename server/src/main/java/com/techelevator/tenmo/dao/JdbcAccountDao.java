@@ -16,20 +16,20 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public double findBalance(int userId) {
-        double balance = 0;
+    public BigDecimal findBalance(int userId) {
+        BigDecimal balance = null;
         String sql = "SELECT balance FROM account WHERE user_id =?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         if(result.next()){
-            balance = result.getDouble("balance");
+            balance = result.getBigDecimal("balance");
         }
         return balance;
     }
 
     @Override
-    public double addToBalance(double amountToAdd, int userId) {
+    public BigDecimal addToBalance(BigDecimal amountToAdd, int userId) {
         Account account = new Account();
-        double addToBalance = account.getBalance();
+        BigDecimal addToBalance = account.getBalance();
         String sql = "UPDATE account SET balance WHERE user_id = ? ";
       //todo put try/catch statement here if code doesnt work
         jdbcTemplate.update(sql, amountToAdd, userId);
@@ -37,9 +37,9 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public double subtractFromBalance(double amountToSubtract, int userId) {
+    public BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int userId) {
         Account account = new Account();
-        double subtractFromBalance = account.getBalance();
+        BigDecimal subtractFromBalance = account.getBalance();
         String sql = "UPDATE account SET balance WHERE user_id = ? ";
         //todo put try/catch statement here if code doesnt work
         jdbcTemplate.update(sql, amountToSubtract, userId);
@@ -48,11 +48,9 @@ public class JdbcAccountDao implements AccountDao {
 
     private Account mapToRowSet(SqlRowSet accountRowSet) {
         Account account = new Account();
-        account.setBalance(accountRowSet.getDouble("balance"));
+        account.setBalance(accountRowSet.getBigDecimal("balance"));
         account.setId(accountRowSet.getInt("id"));
         account.setUserId(accountRowSet.getInt("userId"));
-
-
 
         return account;
     }

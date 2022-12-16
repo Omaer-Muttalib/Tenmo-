@@ -67,7 +67,6 @@ public class JdbcUserDao implements UserDao {
         } catch (DataAccessException e) {
             return false;
         }
-        // TODO: Create the account record with initial balance
         BigDecimal initialBalance = new BigDecimal("1000");
         String accountSql = "INSERT INTO account (user_id, balance) values(?, ?)";
        try {

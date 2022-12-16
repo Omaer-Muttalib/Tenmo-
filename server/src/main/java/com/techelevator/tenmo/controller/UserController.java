@@ -18,8 +18,8 @@ public class UserController {
     private TransferDao transferDao;
     private AccountDao accountDao;
 
-    public UserController(AccountDao accountDao, UserDao dao, TransferDao transferDao) {
-        this.dao = dao;
+    public UserController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
+        this.dao = userDao;
         this.transferDao = transferDao;
         this.accountDao = accountDao;
     }
@@ -32,7 +32,7 @@ public class UserController {
 
 //    //todo: are these two below duplicates?
 //    @RequestMapping(path = "/user/{username}", method = RequestMethod.GET)
-//    public User findByUsername(@PathVariable String username) {
+//    public User findByUsername(@RequestBody User users, @PathVariable String username) {
 //        if (username.equals("")) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 //        }
@@ -49,11 +49,13 @@ public class UserController {
 
     }
     //todo: works springboot but not postman
-//    @RequestMapping(path = "/user", method = RequestMethod.POST)
-//    public boolean userCreated(@RequestBody User user){
-//        if(!userCreated(user)) {
+    @RequestMapping(path = "/user", method = RequestMethod.POST)
+    public boolean userCreated(@RequestBody User user) {
+//        if (userCreated(user)) {
+//            return true;
+//        } else {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 //        }
-//        return true;
-//    }
+        return true;
+    }
 }

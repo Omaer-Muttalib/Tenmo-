@@ -13,6 +13,9 @@ import java.util.List;
 
 public class JdbcUserDaoTests extends BaseDaoTests{
 
+
+    //todo: integration tests
+
     private static final User USER_1 = new User(1001,"bob", "plantlover", "admin");
     private static final User USER_2 = new User(1002,"john", "jellyfish", "USER");
     private static final User USER_3 = new User(1003,"dave", "waterbottle", "USER");
@@ -43,7 +46,6 @@ public class JdbcUserDaoTests extends BaseDaoTests{
         assertUserMatch(USER_2, users.get(1));
         assertUserMatch(USER_3, users.get(2));
         assertUserMatch(USER_4, users.get(3));
-
     }
 
     @Test

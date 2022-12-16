@@ -6,10 +6,12 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-@Component
 
+@Component
 public class JdbcTrasnferDao implements TransferDao {
     private JdbcTemplate jdbcTemplate;
 
@@ -19,10 +21,10 @@ public class JdbcTrasnferDao implements TransferDao {
 
 
     @Override
-    public List<Transfer> getAllTransfer(int accountId) {
+    public List<Transfer> getAllTransfer(int userId) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT * FROM transfer";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
 
         while(result.next()) {
             Transfer transfer = mapToRowSet(result);
@@ -31,41 +33,42 @@ public class JdbcTrasnferDao implements TransferDao {
         return transfers;
     }
 
-
+    //todo: if statement & create a new map with only specific rowset parameters
     @Override
-    public Transfer getTransfer(int id) {
-        String sql = "SELECT * FROM transfer WHERE id = ?";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
 
+    public Transfer getTransfer(int id) {
+        String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
+        result.next();
         return mapToRowSet(result);
     }
 
     @Override
     public Transfer sendTransfer(Transfer newTransfer) {
-        Transfer sendTransfer = null;
-        String sql = "INSERT INTO transfer (fromUser, toUser, transferAmount) VALUES (?, ?, ?)";
-        Integer transferId = jdbcTemplate.queryForObject(sql, int.class, newTransfer.getAccountId(), newTransfer.getDate(), newTransfer.getStatus(), newTransfer.getFromUser(), newTransfer.getToUser(), newTransfer.getTransferAmount());
-        sendTransfer = getTransfer(transferId);
-        return sendTransfer;
+        String sql = "INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String status = "Approved";
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class,
+                newTransfer.getFromUsername(),
+                newTransfer.getToUsername(),
+                newTransfer.getTransferAmount(),
+                currentDateTime,
+                status);
+        newTransfer = getTransfer(transferId);
+        String sqlUpdate = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
+        jdbcTemplate.update(sqlUpdate, newTransfer.getTransferAmount(), newTransfer.getFromUsername());
+        String sqlUpdateSubtract = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
+        jdbcTemplate.update(sqlUpdateSubtract, newTransfer.getTransferAmount(), newTransfer.getFromUsername());
+        return newTransfer;
     }
 
-    //todo check this if code doesn't work//
-    @Override
-    public Transfer getStatus(int id) {
-        String sql = "SELECT * FROM transfer WHERE id = ?";
-        Transfer transfer = null;
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
-        if(result.next()) {
-            transfer = mapToRowSet(result);
-        }
-        return transfer;
-    }
+
 
     @Override
-    public List<Transfer> getPendingStatus(int accountId) {
+    public List<Transfer> getPendingStatus(String status) {
         List<Transfer> transfers = new ArrayList<>();
         String sql = "SELECT * FROM transfer WHERE status iLIKE ?";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, accountId);
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, status);
 
         while(result.next()) {
             Transfer transfer = mapToRowSet(result);
@@ -76,14 +79,21 @@ public class JdbcTrasnferDao implements TransferDao {
 
     private Transfer mapToRowSet(SqlRowSet transferRowSet) {
         Transfer transfer = new Transfer();
-        transfer.setAccountId(transferRowSet.getInt("account_id"));
-        transfer.setDate(transferRowSet.getDate("date").toLocalDate());
-        transfer.setFromUser(transferRowSet.getInt("from_username"));
-        transfer.setToUser(transferRowSet.getInt("to_username"));
-        transfer.setId(transferRowSet.getInt("id"));
-        transfer.setTransferAmount(transferRowSet.getBigDecimal("amount"));
+        transfer.setDate(transferRowSet.getDate("date_and_time").toLocalDate());
+        transfer.setFromUsername(transferRowSet.getString("from_username"));
+        transfer.setToUsername(transferRowSet.getString("to_username"));
+        transfer.setTransferAmount(transferRowSet.getBigDecimal("transfer_amount"));
         transfer.setStatus(transferRowSet.getString("status"));
         return transfer;
     }
-
 }
+//    @Override
+//    public Transfer getStatus(Transfer transfer) {
+//        String sql = "SELECT * FROM transfer WHERE id = ?";
+//        Transfer transfer2 = null;
+//        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transfer);
+//        if(result.next()) {
+//            transfer = mapToRowSet(result);
+//        }
+//        return transfer;
+//    }

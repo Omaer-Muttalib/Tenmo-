@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,37 +22,56 @@ public class TransferController {
     private UserDao userDao;
 
     public TransferController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
-        this.dao = dao;
+        this.dao = transferDao;
         this.userDao = userDao;
         this.accountDao = accountDao;
     }
 
-    //todo ask about the endpoints//
+
+    //todo need to make sure it's just pulling transfers by the user that has their token in -- ask if this needs to be in the dto
+    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    public List<Transfer> getAllTransfer(Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.findIdByUsername(username);
+        List<Transfer> transfers = dao.getAllTransfer(userId);
+        return transfers;
+    }
+
+
+
+    //todo: this is not working in postman
     @RequestMapping(path = "/transfer", method = RequestMethod.GET)
     public Transfer getTransfer(Principal principal) {
         String username = principal.getName();
         int userId = userDao.findIdByUsername(username);
         Transfer transfer = dao.getTransfer(userId);
-//        if (username.equals("")) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        } else {
-        return transfer;
+        if (username.equals("")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        } else {
+            return transfer;
+        }
     }
 
-    //
-//    //todo check to see if we need accountId or not || check the path if its {id} or not
-//    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
-//    public List<Transfer> getAllTransfer(@PathVariable int accountId) {
-//        return dao.getAllTransfer(accountId);
-//    }
-//
-    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Transfer sendTransfer(@RequestBody Transfer transfer) {
-        return dao.sendTransfer(transfer);
+
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(path = "/transfer")
+    public void sendTransfer(@RequestBody Transfer transfer) {
+        dao.sendTransfer(transfer);
     }
-//
-//    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
-//    public Transfer getStatus(@PathVariable int id) {
+
+    //todo this is not working in postman
+    @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)
+    public List<Transfer> getPendingStatus(@RequestParam(defaultValue = "") String status, Principal principal) {
+        List<Transfer> transferList = null;
+        String username = principal.getName();
+        int userId = userDao.findIdByUsername(username);
+        return dao.getPendingStatus(status);
+    }
+
+}
+//    @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)
+//    public Transfer getStatus(Principal principal, @PathVariable ) {
 //        Transfer transfer = dao.getTransfer(id);
 //        if (transfer == null) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -59,9 +79,3 @@ public class TransferController {
 //            return transfer;
 //        }
 //    }
-//    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
-//    public List<Transfer> getPendingStatus(@RequestParam(defaultValue = "") String status_like, int accountId) {
-//        return dao.getAllTransfer(accountId);
-//    }
-//
-}

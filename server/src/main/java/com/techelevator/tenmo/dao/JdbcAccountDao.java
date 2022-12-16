@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -16,43 +17,50 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public double findBalance(int userId) {
-        double balance = 0;
+    public BigDecimal findBalance(int userId) {
+        BigDecimal balance = null;
         String sql = "SELECT balance FROM account WHERE user_id =?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, userId);
         if(result.next()){
-            balance = result.getDouble("balance");
+            balance = result.getBigDecimal("balance");
         }
         return balance;
     }
 
     @Override
-    public double addToBalance(double amountToAdd, int userId) {
+    public BigDecimal addToBalance(BigDecimal amountToAdd, int userId) {
         Account account = new Account();
-        double addToBalance = account.getBalance();
-        String sql = "UPDATE account SET balance WHERE user_id = ? ";
+        BigDecimal addToBalance = account.getBalance();
+        String sql = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE user_id = "
+                + "(SELECT username FROM transfer WHERE username = ? ";
       //todo put try/catch statement here if code doesnt work
-        jdbcTemplate.update(sql, amountToAdd, userId);
+        try {
+            jdbcTemplate.update(sql, amountToAdd, userId);
+        } catch (DataAccessException e) {
+            System.out.println("Not Valid");
+        }
         return addToBalance;
     }
 
     @Override
-    public double subtractFromBalance(double amountToSubtract, int userId) {
+    public BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int userId) {
         Account account = new Account();
-        double subtractFromBalance = account.getBalance();
-        String sql = "UPDATE account SET balance WHERE user_id = ? ";
+        BigDecimal subtractFromBalance = account.getBalance();
+        String sql = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE user_id = "
+                + "(SELECT username FROM transfer WHERE username = ? ";
         //todo put try/catch statement here if code doesnt work
-        jdbcTemplate.update(sql, amountToSubtract, userId);
-        return subtractFromBalance;
+        try {
+            jdbcTemplate.update(sql, amountToSubtract, userId);
+        }catch (DataAccessException e ) {
+            System.out.println("Not Valid");
+        } return subtractFromBalance;
     }
 
     private Account mapToRowSet(SqlRowSet accountRowSet) {
         Account account = new Account();
-        account.setBalance(accountRowSet.getDouble("balance"));
+        account.setBalance(accountRowSet.getBigDecimal("balance"));
         account.setId(accountRowSet.getInt("id"));
         account.setUserId(accountRowSet.getInt("userId"));
-
-
 
         return account;
     }

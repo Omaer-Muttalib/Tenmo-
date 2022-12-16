@@ -24,11 +24,12 @@ public class AccountController {
         this.transferDao = transferDao;
     }
 
+
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
-    public double findBalance(Principal principal) {
+    public BigDecimal findBalance(Principal principal) {
         String username = principal.getName();
         int userId = userDao.findIdByUsername(username);
-        double balance = dao.findBalance(userId);
+        BigDecimal balance = dao.findBalance(userId);
         return balance;
     }
 
@@ -40,7 +41,7 @@ public class AccountController {
 //        double updateBalance = userDao.
 //        return updateBalance;
 //    }
-
+//
 //    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
 //    public BigDecimal subtractFromBalance(@RequestBody BigDecimal amountToSubtract, @PathVariable int id) {
 //        BigDecimal updateBalance = dao.addToBalance(amountToSubtract, id);

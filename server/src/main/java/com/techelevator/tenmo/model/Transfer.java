@@ -6,12 +6,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Transfer {
+    @JsonProperty("transfer_id")
     private int id;
     @JsonProperty("date_and_time")
     private LocalDate date;
-    private int accountId;
-    private int fromUser;
-    private int toUser;
+    @JsonProperty("from_username")
+    private String fromUsername;
+    @JsonProperty("to_username")
+    private String toUsername;
+    @JsonProperty("transfer_amount")
     private BigDecimal transferAmount;
     private String status;
 
@@ -31,28 +34,20 @@ public class Transfer {
         this.date = date;
     }
 
-    public int getAccountId() {
-        return accountId;
+    public String getFromUsername() {
+        return fromUsername;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountId = accountId;
+    public void setFromUsername(String fromUsername) {
+        this.fromUsername = fromUsername;
     }
 
-    public int getFromUser() {
-        return fromUser;
+    public String getToUsername() {
+        return toUsername;
     }
 
-    public void setFromUser(int fromUser) {
-        this.fromUser = fromUser;
-    }
-
-    public int getToUser() {
-        return toUser;
-    }
-
-    public void setToUser(int toUser) {
-        this.toUser = toUser;
+    public void setToUsername(String toUsername) {
+        this.toUsername = toUsername;
     }
 
     public BigDecimal getTransferAmount() {
@@ -71,5 +66,15 @@ public class Transfer {
         this.status = status;
     }
 
-
+    @Override
+    public String toString() {
+        return "Transfer{" +
+                "id=" + id +
+                ", date=" + date +
+                ", fromUsername='" + fromUsername + '\'' +
+                ", toUsername='" + toUsername + '\'' +
+                ", transferAmount=" + transferAmount +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

@@ -41,11 +41,10 @@ public class AccountController {
 //        double updateBalance = userDao.
 //        return updateBalance;
 //    }
-//
+
 //    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
 //    public BigDecimal subtractFromBalance(@RequestBody BigDecimal amountToSubtract, @PathVariable int id) {
 //        BigDecimal updateBalance = dao.addToBalance(amountToSubtract, id);
 //        return updateBalance;
-//
 //    }
 }

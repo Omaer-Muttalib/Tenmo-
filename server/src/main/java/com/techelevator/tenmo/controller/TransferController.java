@@ -37,8 +37,6 @@ public class TransferController {
         return transfers;
     }
 
-
-
     //todo: this is not working in postman
     @RequestMapping(path = "/transfer", method = RequestMethod.GET)
     public Transfer getTransfer(Principal principal) {
@@ -51,8 +49,6 @@ public class TransferController {
             return transfer;
         }
     }
-
-
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/transfer")

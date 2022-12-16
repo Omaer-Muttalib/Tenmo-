@@ -58,17 +58,7 @@ public class JdbcTrasnferDao implements TransferDao {
         return newTransfer;
     }
 
-//    //todo check this if code doesn't work//
-//    @Override
-//    public Transfer getStatus(Transfer transfer) {
-//        String sql = "SELECT * FROM transfer WHERE id = ?";
-//        Transfer transfer2 = null;
-//        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transfer);
-//        if(result.next()) {
-//            transfer = mapToRowSet(result);
-//        }
-//        return transfer;
-//    }
+
 
     @Override
     public List<Transfer> getPendingStatus(String status) {
@@ -92,5 +82,14 @@ public class JdbcTrasnferDao implements TransferDao {
         transfer.setStatus(transferRowSet.getString("status"));
         return transfer;
     }
-
 }
+//    @Override
+//    public Transfer getStatus(Transfer transfer) {
+//        String sql = "SELECT * FROM transfer WHERE id = ?";
+//        Transfer transfer2 = null;
+//        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transfer);
+//        if(result.next()) {
+//            transfer = mapToRowSet(result);
+//        }
+//        return transfer;
+//    }

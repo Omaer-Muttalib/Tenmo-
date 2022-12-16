@@ -27,6 +27,18 @@ public class TransferController {
         this.accountDao = accountDao;
     }
 
+
+    //todo need to make sure it's just pulling transfers by the user that has their token in -- ask if this needs to be in the dto
+    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    public List<Transfer> getAllTransfer(Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.findIdByUsername(username);
+        List<Transfer> transfers = dao.getAllTransfer(userId);
+        return transfers;
+    }
+
+
+
     //todo: this is not working in postman
     @RequestMapping(path = "/transfer", method = RequestMethod.GET)
     public Transfer getTransfer(Principal principal) {
@@ -40,14 +52,7 @@ public class TransferController {
         }
     }
 
-    //todo need to make sure it's just pulling transfers by the user that has their token in -- ask if this needs to be in the dto
-    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
-    public List<Transfer> getAllTransfer(Principal principal) {
-        String username = principal.getName();
-        int userId = userDao.findIdByUsername(username);
-        List<Transfer> transfers = dao.getAllTransfer(userId);
-        return transfers;
-    }
+
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/transfer")

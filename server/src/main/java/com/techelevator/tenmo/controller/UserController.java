@@ -27,6 +27,7 @@ public class UserController {
     //todo: only want to return usernames
     @RequestMapping(path = "/user", method = RequestMethod.GET)
     public List<User> findAllUsers() {
+        //String username = get.user_id;
         //user dto
         //loop that makes userdto objects
         return dao.findAll();

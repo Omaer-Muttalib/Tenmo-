@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,14 @@ public class JdbcAccountDao implements AccountDao {
     public BigDecimal addToBalance(BigDecimal amountToAdd, int userId) {
         Account account = new Account();
         BigDecimal addToBalance = account.getBalance();
-        String sql = "UPDATE account SET balance WHERE user_id = ? ";
+        String sql = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE user_id = "
+                + "(SELECT username FROM transfer WHERE username = ? ";
       //todo put try/catch statement here if code doesnt work
-        jdbcTemplate.update(sql, amountToAdd, userId);
+        try {
+            jdbcTemplate.update(sql, amountToAdd, userId);
+        } catch (DataAccessException e) {
+            System.out.println("Not Valid");
+        }
         return addToBalance;
     }
 
@@ -40,10 +46,14 @@ public class JdbcAccountDao implements AccountDao {
     public BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int userId) {
         Account account = new Account();
         BigDecimal subtractFromBalance = account.getBalance();
-        String sql = "UPDATE account SET balance WHERE user_id = ? ";
+        String sql = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE user_id = "
+                + "(SELECT username FROM transfer WHERE username = ? ";
         //todo put try/catch statement here if code doesnt work
-        jdbcTemplate.update(sql, amountToSubtract, userId);
-        return subtractFromBalance;
+        try {
+            jdbcTemplate.update(sql, amountToSubtract, userId);
+        }catch (DataAccessException e ) {
+            System.out.println("Not Valid");
+        } return subtractFromBalance;
     }
 
     private Account mapToRowSet(SqlRowSet accountRowSet) {

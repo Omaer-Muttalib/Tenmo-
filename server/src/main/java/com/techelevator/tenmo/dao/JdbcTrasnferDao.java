@@ -55,6 +55,10 @@ public class JdbcTrasnferDao implements TransferDao {
                 currentDateTime,
                 status);
         newTransfer = getTransfer(transferId);
+        String sqlUpdate = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
+        jdbcTemplate.update(sqlUpdate, newTransfer.getTransferAmount(), newTransfer.getFromUsername());
+        String sqlUpdateSubtract = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
+        jdbcTemplate.update(sqlUpdateSubtract, newTransfer.getTransferAmount(), newTransfer.getFromUsername());
         return newTransfer;
     }
 

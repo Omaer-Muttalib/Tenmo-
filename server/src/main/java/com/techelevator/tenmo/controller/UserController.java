@@ -24,6 +24,7 @@ public class UserController {
         this.accountDao = accountDao;
     }
 
+    //todo: only want to return usernames
     @RequestMapping(path = "/user", method = RequestMethod.GET)
     public List<User> findAllUsers() {
         return dao.findAll();
@@ -38,7 +39,7 @@ public class UserController {
 //        return dao.findByUsername(username);
 //    }
 
-
+    //todo: can we endpoint {username}
     @RequestMapping(path = "/user/{username}", method = RequestMethod.GET)
     public int findId(@PathVariable String username) {
         if (username.equals("")) {

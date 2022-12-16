@@ -24,6 +24,7 @@ public class AccountController {
         this.transferDao = transferDao;
     }
 
+
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
     public double findBalance(Principal principal) {
         String username = principal.getName();

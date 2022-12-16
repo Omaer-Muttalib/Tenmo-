@@ -29,7 +29,7 @@ public class TransferController {
     }
 
 
-    //todo ask about the endpoints//
+    //todo: remove the id endpoint and have it use the dto
     @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
     public Transfer getTransfer(@PathVariable int id) {
 //        String username = principal.getName();

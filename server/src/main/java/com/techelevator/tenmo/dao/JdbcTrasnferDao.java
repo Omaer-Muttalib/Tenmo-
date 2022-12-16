@@ -32,7 +32,7 @@ public class JdbcTrasnferDao implements TransferDao {
         return transfers;
     }
 
-    //todo: if statement
+    //todo: if statement & create a new map with only specific rowset parameters
     @Override
     public Transfer getTransfer(int id) {
         String sql = "SELECT * FROM transfer WHERE id = ?";
@@ -40,10 +40,9 @@ public class JdbcTrasnferDao implements TransferDao {
 
         return mapToRowSet(result);
     }
-
+    //todo: update void to transfer & we should condense this down (remove the user_ids)
     @Override
-    public void sendTransfer(Transfer newTransfer) {
-        Transfer sendTransfer = null;
+    public Transfer sendTransfer(Transfer newTransfer) {
         String sql = "INSERT INTO transfer (date_and_time, from_username, from_user_id, to_username, to_user_id, transfer_amount, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Integer transferId = jdbcTemplate.queryForObject(sql, int.class,
                 newTransfer.getDate(),
@@ -53,8 +52,8 @@ public class JdbcTrasnferDao implements TransferDao {
                 newTransfer.getFromUsername(),
                 newTransfer.getToUsername(),
                 newTransfer.getTransferAmount());
-        sendTransfer = getTransfer(transferId);
-
+        newTransfer = getTransfer(transferId);
+        return newTransfer;
     }
 
 //    //todo check this if code doesn't work//

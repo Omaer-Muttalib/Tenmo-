@@ -43,7 +43,7 @@
 //    }
 //    @RequestMapping(path = "/user", method = RequestMethod.GET)
 //    public boolean userCreated(){
-//        if(!userCreated()) {
+//        if(userCreated != user)) {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 //        }
 //        return true;

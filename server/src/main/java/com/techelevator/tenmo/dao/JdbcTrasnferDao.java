@@ -21,9 +21,9 @@ public class JdbcTrasnferDao implements TransferDao {
 
 
     @Override
-    public List<Transfer> getAllTransfer(int id) {
+    public List<Transfer> getAllTransfer(int userId) {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT * FROM transfer WHERE from_username ILIKE ?";
+        String sql = "SELECT * FROM transfer";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
 
         while(result.next()) {
@@ -35,14 +35,14 @@ public class JdbcTrasnferDao implements TransferDao {
 
     //todo: if statement & create a new map with only specific rowset parameters
     @Override
+
     public Transfer getTransfer(int id) {
-        String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
+        String sql = "SELECT * FROM transfer WHERE transaction_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
         result.next();
         return mapToRowSet(result);
     }
 
-    //todo: update void to transfer & we should condense this down (remove the user_ids)
     @Override
     public Transfer sendTransfer(Transfer newTransfer) {
         String sql = "INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";

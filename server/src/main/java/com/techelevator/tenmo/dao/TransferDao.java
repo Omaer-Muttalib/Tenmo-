@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TransferDao {
     //todo: remove the id and do this in the dto
-    public List<Transfer> getAllTransfer(int id);
+    public List<Transfer> getAllTransfer(int userId);
     public Transfer getTransfer(int id);
     public Transfer sendTransfer(Transfer newTransfer);
 //    public Transfer getStatus(int id);

@@ -46,7 +46,6 @@ public class JdbcUserDaoTests extends BaseDaoTests{
         assertUserMatch(USER_2, users.get(1));
         assertUserMatch(USER_3, users.get(2));
         assertUserMatch(USER_4, users.get(3));
-
     }
 
     @Test

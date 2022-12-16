@@ -27,35 +27,20 @@ public class UserController {
     //todo: only want to return usernames
     @RequestMapping(path = "/user", method = RequestMethod.GET)
     public List<User> findAllUsers() {
+        //user dto
+        //loop that makes userdto objects
         return dao.findAll();
     }
 
-//    //todo: are these two below duplicates?
-//    @RequestMapping(path = "/user/{username}", method = RequestMethod.GET)
-//    public User findByUsername(@RequestBody User users, @PathVariable String username) {
-//        if (username.equals("")) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-//        return dao.findByUsername(username);
-//    }
-
-    //todo: can we endpoint {username}
+    //todo: do we need this?
     @RequestMapping(path = "/user/{username}", method = RequestMethod.GET)
-    public int findId(@PathVariable String username) {
+    public User findByUsername(@RequestBody User users, @PathVariable String username) {
         if (username.equals("")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        return dao.findIdByUsername(username);
+        return dao.findByUsername(username);
+        //user dto
+        //loop that makes userdto objects
+    }
 
-    }
-    //todo: works springboot but not postman
-    @RequestMapping(path = "/user", method = RequestMethod.POST)
-    public boolean userCreated(@RequestBody User user) {
-//        if (userCreated(user)) {
-//            return true;
-//        } else {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-//        }
-        return true;
-    }
 }

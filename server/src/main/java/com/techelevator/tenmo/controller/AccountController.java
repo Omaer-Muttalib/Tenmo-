@@ -32,20 +32,4 @@ public class AccountController {
         BigDecimal balance = dao.findBalance(userId);
         return balance;
     }
-
-//    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
-//    public double addToBalance(@RequestBody Account account, Principal principal, double amountToAdd) {
-//        String username = principal.getName();
-//        int userId = userDao.findIdByUsername(username);
-//
-//        double updateBalance = userDao.
-//        return updateBalance;
-//    }
-//
-//    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
-//    public BigDecimal subtractFromBalance(@RequestBody BigDecimal amountToSubtract, @PathVariable int id) {
-//        BigDecimal updateBalance = dao.addToBalance(amountToSubtract, id);
-//        return updateBalance;
-//
-//    }
 }

@@ -1,9 +1,11 @@
 package com.techelevator.tenmo.controller;
 
 
+import com.techelevator.tenmo.checker.TransferChecks;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,11 +22,13 @@ public class TransferController {
     private TransferDao dao;
     private AccountDao accountDao;
     private UserDao userDao;
+    private TransferChecks checks;
 
     public TransferController(AccountDao accountDao, UserDao userDao, TransferDao transferDao) {
         this.dao = transferDao;
         this.userDao = userDao;
         this.accountDao = accountDao;
+        this.checks = new TransferChecks(transferDao, accountDao, userDao);
     }
 
 
@@ -57,8 +61,13 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/transfer")
     public void sendTransfer(@RequestBody Transfer transfer) {
-        dao.sendTransfer(transfer);
+            checks.performTransfer(transfer);
+//        Account fromAccount = new Account();
+//        Account toAccount = new Account();
+//        fromAccount.setBalance(accountDao.findBalance(userDao.findIdByUsername(transfer.getFromUsername())));
+//        toAccount.setBalance(accountDao.findBalance(userDao.findIdByUsername(transfer.getToUsername())));
     }
+
 
     //todo this is not working in postman
     @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)

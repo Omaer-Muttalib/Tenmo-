@@ -12,7 +12,8 @@ import java.math.BigDecimal;
 public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcAccountDao(JdbcTemplate jdbcTemplate) {
+
+    public JdbcAccountDao(JdbcTemplate jdbcTemplate ) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -27,33 +28,28 @@ public class JdbcAccountDao implements AccountDao {
         return balance;
     }
 
+
     @Override
     public BigDecimal addToBalance(BigDecimal amountToAdd, int userId) {
-        Account account = new Account();
-        BigDecimal addToBalance = account.getBalance();
-        String sql = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE user_id = "
-                + "(SELECT username FROM transfer WHERE username = ? ";
-      //todo put try/catch statement here if code doesnt work
+        BigDecimal currentBalance = findBalance(userId);
+        String sql = "UPDATE account SET balance = ? WHERE user_id = ?";
         try {
-            jdbcTemplate.update(sql, amountToAdd, userId);
+            jdbcTemplate.update(sql, currentBalance.add(amountToAdd).doubleValue(), userId);
         } catch (DataAccessException e) {
             System.out.println("Not Valid");
         }
-        return addToBalance;
+        return findBalance(userId);
     }
 
     @Override
     public BigDecimal subtractFromBalance(BigDecimal amountToSubtract, int userId) {
-        Account account = new Account();
-        BigDecimal subtractFromBalance = account.getBalance();
-        String sql = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE user_id = "
-                + "(SELECT username FROM transfer WHERE username = ? ";
-        //todo put try/catch statement here if code doesnt work
+        BigDecimal currentBalance = findBalance(userId);
+        String sql = "UPDATE account SET balance = ? WHERE user_id = ?";
         try {
-            jdbcTemplate.update(sql, amountToSubtract, userId);
+            jdbcTemplate.update(sql, currentBalance.subtract(amountToSubtract).doubleValue(), userId);
         }catch (DataAccessException e ) {
             System.out.println("Not Valid");
-        } return subtractFromBalance;
+        } return findBalance(userId);
     }
 
     private Account mapToRowSet(SqlRowSet accountRowSet) {

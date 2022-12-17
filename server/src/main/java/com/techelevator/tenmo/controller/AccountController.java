@@ -33,6 +33,7 @@ public class AccountController {
         return balance;
     }
 
+
 //    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
 //    public double addToBalance(@RequestBody Account account, Principal principal, double amountToAdd) {
 //        String username = principal.getName();
@@ -47,4 +48,5 @@ public class AccountController {
 //        BigDecimal updateBalance = dao.addToBalance(amountToSubtract, id);
 //        return updateBalance;
 //    }
+
 }

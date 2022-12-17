@@ -11,6 +11,7 @@ public interface TransferDao {
     public List<Transfer> getAllTransfer(int userId);
     public Transfer getTransfer(int id);
     public Transfer sendTransfer(Transfer newTransfer);
+    public Transfer createTransfer (Transfer createTransfer);
 //    public Transfer getStatus(int id);
     public List<Transfer> getPendingStatus(String status);
 }

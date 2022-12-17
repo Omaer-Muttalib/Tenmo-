@@ -61,6 +61,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 @PreAuthorize("isAuthenticated()")
 @RestController
@@ -76,14 +77,16 @@ public class UserController {
         this.accountDao = accountDao;
     }
 
-    //todo: only want to return usernames
     @RequestMapping(path = "/user", method = RequestMethod.GET)
-    public List<User> findAllUsers() {
-        //String username = get.user_id;
-        //user dto
-        //loop that makes userdto objects
-        return dao.findAll();
+    public List<String> findAllUsers() {
+        List<String> username = new ArrayList<>();
+        List<User> users = dao.findAll();
+        for (User user : users) {
+            username.add(user.getUsername());
+        }
+        return username;
     }
+
 
     //todo: do we need this?
     @RequestMapping(path = "/user/{username}", method = RequestMethod.GET)

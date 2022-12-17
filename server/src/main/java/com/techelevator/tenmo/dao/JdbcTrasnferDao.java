@@ -44,6 +44,21 @@ public class JdbcTrasnferDao implements TransferDao {
     }
 
     @Override
+    public Transfer createTransfer(Transfer createTransfer) {
+        String sql = "INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String status = "Approved";
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class,
+                createTransfer.getFromUsername(),
+                createTransfer.getToUsername(),
+                createTransfer.getTransferAmount(),
+                currentDateTime,
+                status);
+        return getTransfer(transferId);
+
+    }
+
+    @Override
     public Transfer sendTransfer(Transfer newTransfer) {
         String sql = "INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
         LocalDateTime currentDateTime = LocalDateTime.now();

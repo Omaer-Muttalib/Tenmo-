@@ -30,7 +30,7 @@ public class TransferChecks {
 
     public void performTransfer(Transfer transfer) {
         //1. check transfer is valid, e.g. insufficient funds etc
-        if (isTransferValid()) {//you can use boolean or custom exceptions
+        if (isTransferValid(transfer)) {//you can use boolean or custom exceptions
             //2. deduct amount from sender
             deductMoney(transfer.getFromUsername(), transfer.getTransferAmount());
             //3. add amount to receiver
@@ -40,31 +40,28 @@ public class TransferChecks {
         }
     }
 
-    private boolean isTransferValid(Transfer transfer) {
+    public boolean isTransferValid(Transfer transfer) {
 
-//        if(accountDao.getUserId() == toAccount.getUserId()) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You cant send money to yourself");
-//        }
-//        if(fromAccount.getBalance().compareTo(transfer.getTransferAmount()) == -1) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You have no money left");
-//        }
-//        if(transfer.getToUsername() == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Username");
-//        }
-//        if(transferDao.getFromUsername() == null) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Username");
-//        }
-
-//        if(transfer.getTransferAmount().equals(null)) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Amount");
-//        }
+        if(transfer.getFromUsername().equals(transfer.getToUsername())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can't send money to yourself");
+        }
+        //if username is not found both for to and from
+        if(accountDao.findBalance(userDao.findIdByUsername(transfer.getFromUsername())).compareTo(transfer.getTransferAmount()) == -1) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "You have no money left");
+        }
+        if(transfer.getFromUsername().equals(null)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Username");
+        }
+        if(transfer.getToUsername().equals(null)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Username");
+        }
+        if(transfer.getTransferAmount().equals(null)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Amount");
+        }
         if (transfer.getTransferAmount().compareTo(new BigDecimal("0.01")) == -1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Amount greater than 0.00");
         }
-//        // all checks
-        //series of checks
-        //not sufficient funds
-        return true;
+        return false;
     }
 
     private void deductMoney(String sender, BigDecimal amount) {

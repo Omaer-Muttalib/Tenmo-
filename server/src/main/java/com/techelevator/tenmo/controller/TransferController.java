@@ -47,7 +47,7 @@ public class TransferController {
         String username = principal.getName();
         int userId = userDao.findIdByUsername(username);
         Transfer transfer = dao.getTransfer(userId);
-        if (username.equals("")) {
+        if (!username.equals("")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } else {
             return transfer;
@@ -56,12 +56,10 @@ public class TransferController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/transfer")
-    public void sendTransfer(@RequestBody Transfer transfer) {
+    public void sendTransfer(@RequestBody Transfer transfer, Principal principal) {
+        if (!transfer.getFromUsername().equals(principal)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't access"); }
             checks.performTransfer(transfer);
-//        Account fromAccount = new Account();
-//        Account toAccount = new Account();
-//        fromAccount.setBalance(accountDao.findBalance(userDao.findIdByUsername(transfer.getFromUsername())));
-//        toAccount.setBalance(accountDao.findBalance(userDao.findIdByUsername(transfer.getToUsername())));
     }
 
 
@@ -75,6 +73,8 @@ public class TransferController {
     }
 
 }
+
+
 //    @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)
 //    public Transfer getStatus(Principal principal, @PathVariable ) {
 //        Transfer transfer = dao.getTransfer(id);

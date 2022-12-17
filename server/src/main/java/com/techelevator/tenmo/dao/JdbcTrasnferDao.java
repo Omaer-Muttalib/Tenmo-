@@ -60,16 +60,6 @@ public class JdbcTrasnferDao implements TransferDao {
 
     @Override
     public Transfer sendTransfer(Transfer newTransfer) {
-        String sql = "INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        String status = "Approved";
-        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class,
-                newTransfer.getFromUsername(),
-                newTransfer.getToUsername(),
-                newTransfer.getTransferAmount(),
-                currentDateTime,
-                status);
-        newTransfer = getTransfer(transferId);
         String sqlUpdate = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
         jdbcTemplate.update(sqlUpdate, newTransfer.getTransferAmount(), newTransfer.getFromUsername());
         String sqlUpdateSubtract = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";

@@ -63,9 +63,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-@PreAuthorize("isAuthenticated()")
+
 @RestController
-//todo if test doesnt pass maybe add preauth @
+@PreAuthorize("isAuthenticated()")
 public class UserController {
     private UserDao dao;
     private TransferDao transferDao;

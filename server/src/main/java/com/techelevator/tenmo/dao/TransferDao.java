@@ -10,8 +10,10 @@ public interface TransferDao {
     //todo: remove the id and do this in the dto
     public List<Transfer> getAllTransfer(int userId);
     public Transfer getTransfer(int id);
-    public Transfer sendTransfer(Transfer newTransfer);
     public Transfer createTransfer (Transfer createTransfer);
-//    public Transfer getStatus(int id);
+    public Transfer sendTransfer(Transfer newTransfer);
     public List<Transfer> getPendingStatus(String status);
 }
+
+
+//    public Transfer getStatus(int id);

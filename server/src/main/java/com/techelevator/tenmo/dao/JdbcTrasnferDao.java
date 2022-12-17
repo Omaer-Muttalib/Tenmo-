@@ -35,7 +35,6 @@ public class JdbcTrasnferDao implements TransferDao {
 
     //todo: if statement & create a new map with only specific rowset parameters
     @Override
-
     public Transfer getTransfer(int id) {
         String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
@@ -92,6 +91,8 @@ public class JdbcTrasnferDao implements TransferDao {
         return transfer;
     }
 }
+
+
 //    @Override
 //    public Transfer getStatus(Transfer transfer) {
 //        String sql = "SELECT * FROM transfer WHERE id = ?";

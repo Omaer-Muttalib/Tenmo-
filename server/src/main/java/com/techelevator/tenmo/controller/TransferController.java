@@ -31,14 +31,17 @@ public class TransferController {
         this.checks = new TransferChecks(transferDao, accountDao, userDao);
     }
 
-
     //todo need to make sure it's just pulling transfers by the user that has their token in -- ask if this needs to be in the dto
     @RequestMapping(path = "/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfer(Principal principal) {
         String username = principal.getName();
         int userId = userDao.findIdByUsername(username);
         List<Transfer> transfers = dao.getAllTransfer(userId);
-        return transfers;
+        if (!principal.equals(username)) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No transfers");
+        } else {
+            return transfers;
+        }
     }
 
     //todo: this is not working in postman
@@ -47,7 +50,7 @@ public class TransferController {
         String username = principal.getName();
         int userId = userDao.findIdByUsername(username);
         Transfer transfer = dao.getTransfer(userId);
-        if (!username.equals("")) {
+        if (!principal.equals(userId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } else {
             return transfer;
@@ -61,7 +64,6 @@ public class TransferController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't access"); }
             checks.performTransfer(transfer);
     }
-
 
     //todo this is not working in postman
     @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)

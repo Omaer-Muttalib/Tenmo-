@@ -3,15 +3,11 @@ package com.techelevator.tenmo.checker;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
-import com.techelevator.tenmo.model.TransferDTO;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
+
 import java.math.BigDecimal;
 
 
@@ -66,16 +62,16 @@ public class TransferChecks {
 
     private void deductMoney(String sender, BigDecimal amount) {
         // get current balance
-        int userId = userDao.findIdByUsername(sender);
         // subtract amount to current money
         //update balance
+        int userId = userDao.findIdByUsername(sender);
         accountDao.subtractFromBalance(amount, userId);
     }
     private void addMoney(String receiver, BigDecimal amount) {
         // get current balance
-        int userId = userDao.findIdByUsername(receiver);
         // add amount to current money
         //update balance
+        int userId = userDao.findIdByUsername(receiver);
         accountDao.addToBalance(amount, userId);
     }
     private void addTransferRecord(Transfer transfer) {
@@ -87,5 +83,3 @@ public class TransferChecks {
             this.checker = checker;
         }
     }
-
-   // public void makeTransfer(@Valid @RequestBody inputs)

@@ -33,11 +33,32 @@ CREATE TABLE account (
 	CONSTRAINT FK_account_tenmo_user FOREIGN KEY (user_id) REFERENCES tenmo_user (user_id)
 );
 
+CREATE SEQUENCE seq_transfer_id
+  INCREMENT BY 1
+  START WITH 3001
+  NO MAXVALUE;
 
+CREATE TABLE transfer (
+	transfer_id int NOT NULL DEFAULT nextval('seq_transfer_id'),
+	date_and_time timestamp NOT NULL,
+	from_username varchar (50) NOT NULL,
+	to_username varchar (50) NOT NULL,
+	transfer_amount numeric NOT NULL,
+	status varchar NOT NULL,
+	CONSTRAINT PK_transfer PRIMARY KEY (transfer_id),
+	CONSTRAINT FK_to_username FOREIGN KEY (to_username) REFERENCES tenmo_user(username),
+	CONSTRAINT FK_from_username FOREIGN KEY (from_username) REFERENCES tenmo_user(username)
+	);
 
 INSERT INTO tenmo_user (username, password_hash)
 VALUES ('bob', '$2a$10$G/MIQ7pUYupiVi72DxqHquxl73zfd7ZLNBoB2G6zUb.W16imI2.W2'),
        ('user', '$2a$10$Ud8gSvRS4G1MijNgxXWzcexeXlVs4kWDOkjE7JFIkNLKEuE57JAEy');
+
+INSERT INTO account (user_id, balance)
+VALUES (1001, 1000.00), (1002, 950.00);
+
+INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status)
+VALUES ('bob', 'user', 100.00, '2022-12-18', 'Approved');
 
 
 COMMIT;

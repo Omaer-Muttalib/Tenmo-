@@ -31,26 +31,36 @@ public class TransferController {
         this.checks = new TransferChecks(transferDao, accountDao, userDao);
     }
 
+
+//    @RequestMapping(path = "user/transfers", method = RequestMethod.GET)
+//    public List<Transfer> viewByUsername(Principal principal){
+//        String username = principal.getName();
+//        int userId = userDao.findIdByUsername(username);
+//        Transfer transfer = dao.getTransfer(userId);
+//        return dao.getAllTransfer(userId);
+//
+//    }
+
     //todo need to make sure it's just pulling transfers by the user that has their token in -- ask if this needs to be in the dto
     @RequestMapping(path = "/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfer(Principal principal) {
+
         String username = principal.getName();
-        int userId = userDao.findIdByUsername(username);
-        List<Transfer> transfers = dao.getAllTransfer(userId);
-        if (!principal.equals(username)) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No transfers");
-        } else {
-            return transfers;
-        }
+
+        return dao.getAllTransfer(username);
     }
 
-    //todo: this is not working in postman
-    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
-    public Transfer getTransfer(Principal principal) {
+    //todo: come back to set up correctly
+    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
+    public Transfer getTransfer(@PathVariable int id,  Principal principal) {
         String username = principal.getName();
-        int userId = userDao.findIdByUsername(username);
-        Transfer transfer = dao.getTransfer(userId);
-        if (!principal.equals(userId)) {
+        Transfer transfer = dao.getTransfer(id);
+        if (!username.equals(transfer.getToUsername())){
+            if (!username.equals(transfer.getFromUsername())){
+                throw new SecurityException("Unable to access!");
+            }
+        }
+        if (username.equals("")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         } else {
             return transfer;
@@ -60,23 +70,24 @@ public class TransferController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/transfer")
     public void sendTransfer(@RequestBody Transfer transfer, Principal principal) {
-        if (!transfer.getFromUsername().equals(principal)) {
+        String username = principal.getName();
+        if (!transfer.getFromUsername().equals(username)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't access"); }
-            checks.performTransfer(transfer);
+        checks.performTransfer(transfer);
     }
 
-    //todo this is not working in postman
-    @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)
-    public List<Transfer> getPendingStatus(@RequestParam(defaultValue = "") String status, Principal principal) {
-        List<Transfer> transferList = null;
-        String username = principal.getName();
-        int userId = userDao.findIdByUsername(username);
-        return dao.getPendingStatus(status);
-    }
+
+
+
+//    @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)
+//    public List<Transfer> getPendingStatus(@RequestParam(defaultValue = "") String status, Principal principal) {
+//        List<Transfer> transferList = null;
+//        String username = principal.getName();
+//        int userId = userDao.findIdByUsername(username);
+//        return dao.getPendingStatus(status);
+//    }
 
 }
-
-
 //    @RequestMapping(path = "/transfer/{status}", method = RequestMethod.GET)
 //    public Transfer getStatus(Principal principal, @PathVariable ) {
 //        Transfer transfer = dao.getTransfer(id);

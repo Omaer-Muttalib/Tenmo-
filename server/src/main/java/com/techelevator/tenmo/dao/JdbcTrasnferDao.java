@@ -5,8 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +17,11 @@ public class JdbcTrasnferDao implements TransferDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
-    public List<Transfer> getAllTransfer(int userId) {
+    public List<Transfer> getAllTransfer(String username) {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT * FROM transfer";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql);
+        String sql = "SELECT * FROM transfer WHERE from_username = ? OR to_username = ?";
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, username, username);
 
         while(result.next()) {
             Transfer transfer = mapToRowSet(result);
@@ -33,13 +30,15 @@ public class JdbcTrasnferDao implements TransferDao {
         return transfers;
     }
 
-    //todo: if statement & create a new map with only specific rowset parameters
     @Override
     public Transfer getTransfer(int id) {
+        Transfer transfer = null;
         String sql = "SELECT * FROM transfer WHERE transfer_id = ?";
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
-        result.next();
-        return mapToRowSet(result);
+        if(result.next()){
+            transfer = mapToRowSet(result);
+        }
+        return transfer;
     }
 
     @Override
@@ -59,6 +58,16 @@ public class JdbcTrasnferDao implements TransferDao {
 
     @Override
     public Transfer sendTransfer(Transfer newTransfer) {
+        String sql = "INSERT INTO transfer (from_username, to_username, transfer_amount, date_and_time, status) VALUES (?, ?, ?, ?, ?) RETURNING transfer_id";
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        String status = "Approved";
+        Integer transferId = jdbcTemplate.queryForObject(sql, Integer.class,
+                newTransfer.getFromUsername(),
+                newTransfer.getToUsername(),
+                newTransfer.getTransferAmount(),
+                currentDateTime,
+                status);
+        newTransfer = getTransfer(transferId);
         String sqlUpdate = "UPDATE account SET balance = balance + ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
         jdbcTemplate.update(sqlUpdate, newTransfer.getTransferAmount(), newTransfer.getFromUsername());
         String sqlUpdateSubtract = "UPDATE account SET balance = balance - ? WHERE user_id IN (SELECT user_id FROM tenmo_user WHERE username = ?)";
@@ -66,23 +75,9 @@ public class JdbcTrasnferDao implements TransferDao {
         return newTransfer;
     }
 
-
-
-    @Override
-    public List<Transfer> getPendingStatus(String status) {
-        List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT * FROM transfer WHERE status iLIKE ?";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, status);
-
-        while(result.next()) {
-            Transfer transfer = mapToRowSet(result);
-            transfers.add(transfer);
-        }
-        return transfers;
-    }
-
     private Transfer mapToRowSet(SqlRowSet transferRowSet) {
         Transfer transfer = new Transfer();
+        transfer.setId(transferRowSet.getInt("transfer_id"));
         transfer.setDate(transferRowSet.getDate("date_and_time").toLocalDate());
         transfer.setFromUsername(transferRowSet.getString("from_username"));
         transfer.setToUsername(transferRowSet.getString("to_username"));
@@ -91,8 +86,6 @@ public class JdbcTrasnferDao implements TransferDao {
         return transfer;
     }
 }
-
-
 //    @Override
 //    public Transfer getStatus(Transfer transfer) {
 //        String sql = "SELECT * FROM transfer WHERE id = ?";
@@ -102,4 +95,16 @@ public class JdbcTrasnferDao implements TransferDao {
 //            transfer = mapToRowSet(result);
 //        }
 //        return transfer;
+//    }
+//      @Override
+//    public List<Transfer> getPendingStatus(String status) {
+//        List<Transfer> transfers = new ArrayList<>();
+//        String sql = "SELECT * FROM transfer WHERE status iLIKE ?";
+//        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, status);
+//
+//        while(result.next()) {
+//            Transfer transfer = mapToRowSet(result);
+//            transfers.add(transfer);
+//        }
+//        return transfers;
 //    }

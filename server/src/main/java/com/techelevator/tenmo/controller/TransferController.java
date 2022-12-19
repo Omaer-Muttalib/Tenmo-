@@ -31,17 +31,6 @@ public class TransferController {
         this.checks = new TransferChecks(transferDao, accountDao, userDao);
     }
 
-
-//    @RequestMapping(path = "user/transfers", method = RequestMethod.GET)
-//    public List<Transfer> viewByUsername(Principal principal){
-//        String username = principal.getName();
-//        int userId = userDao.findIdByUsername(username);
-//        Transfer transfer = dao.getTransfer(userId);
-//        return dao.getAllTransfer(userId);
-//
-//    }
-
-    //todo need to make sure it's just pulling transfers by the user that has their token in -- ask if this needs to be in the dto
     @RequestMapping(path = "/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfer(Principal principal) {
 
@@ -50,7 +39,6 @@ public class TransferController {
         return dao.getAllTransfer(username);
     }
 
-    //todo: come back to set up correctly
     @RequestMapping(path = "/transfer/{id}", method = RequestMethod.GET)
     public Transfer getTransfer(@PathVariable int id,  Principal principal) {
         String username = principal.getName();

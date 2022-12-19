@@ -71,10 +71,6 @@ public class TransferChecks {
         if (transfer.getTransferAmount().compareTo(new BigDecimal("0.01")) == -1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must enter an Amount greater than 0.00");
         }
-        //todo: this is not doing anything
-        if (transfer.getTransferAmount().equals(transfer.getTransferAmount().scale() >=3 )) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must only enter two decimal points");
-        }
 
         // all checks
         //series of checks

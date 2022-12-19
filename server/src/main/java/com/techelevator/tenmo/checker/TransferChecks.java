@@ -92,3 +92,4 @@ public class TransferChecks {
     }
 
    // public void makeTransfer(@Valid @RequestBody inputs)
+transfer.getToUsername.isNot

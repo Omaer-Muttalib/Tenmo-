@@ -12,8 +12,6 @@ import java.util.List;
 public class JdbcUserDaoTests extends BaseDaoTests{
 
 
-    //todo: integration tests
-
     private static final User USER_1 = new User(1001,"bob", "plantlover", "admin");
     private static final User USER_2 = new User(1002,"john", "jellyfish", "USER");
 

@@ -32,8 +32,6 @@ import java.util.List;
 =======
 public class JdbcTransferDaoTests extends BaseDaoTests {
 
-    //todo: integrations tests
-
     private static final Transfer TRANSFER_1 = new Transfer(3001, LocalDate.now(), "bob", "user", BigDecimal.valueOf(100.00).setScale(2), "Approved");
 
 
@@ -76,10 +74,8 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
         Transfer actualTransfer = sut.createTransfer(createTransfer);
         Integer newId = createTransfer.getId();
         createTransfer.setId(newId);
-
         assertTransferMatch(createTransfer, actualTransfer);
     }
-
 
     @Test
     public void sendTransferTest(){

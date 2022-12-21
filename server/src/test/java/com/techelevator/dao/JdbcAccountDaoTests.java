@@ -23,8 +23,6 @@ import java.util.List;
 
 public class JdbcAccountDaoTests extends BaseDaoTests {
 
-    //todo: integration tests
-
     private static final Account ACCOUNT_1 = new Account(2001, 1001, BigDecimal.valueOf(1000.0));
     private static final Account ACCOUNT_2 = new Account(2002, 1002, BigDecimal.valueOf(999.0));
 
@@ -34,7 +32,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
         sut = new JdbcAccountDao(jdbcTemplate);
     }
-    //todo: come back
+
     @Test
     public void findBalanceTest(){
         BigDecimal expectedBalance = BigDecimal.valueOf(1000.00).setScale(2, RoundingMode.HALF_UP);
@@ -59,7 +57,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     @Test
     public void addToBalanceTest() {
-        BigDecimal expectedBalance = BigDecimal.valueOf(1100.00).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal expectedBalance = BigDecimal.valueOf(1050.00).setScale(2, RoundingMode.HALF_UP);
         BigDecimal amountToAdd = new BigDecimal("100.0");
         BigDecimal actualBalance = sut.findBalance(1002).add(amountToAdd);
         Assert.assertEquals(expectedBalance, actualBalance);

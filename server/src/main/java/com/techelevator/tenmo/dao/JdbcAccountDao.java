@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -28,13 +29,12 @@ public class JdbcAccountDao implements AccountDao {
         return balance;
     }
 
-
     @Override
     public BigDecimal addToBalance(BigDecimal amountToAdd, int userId) {
         BigDecimal currentBalance = findBalance(userId);
         String sql = "UPDATE account SET balance = ? WHERE user_id = ?";
         try {
-            jdbcTemplate.update(sql, currentBalance.add(amountToAdd).doubleValue(), userId);
+            jdbcTemplate.update(sql, currentBalance.add(amountToAdd), userId);
         } catch (DataAccessException e) {
             System.out.println("Not Valid");
         }

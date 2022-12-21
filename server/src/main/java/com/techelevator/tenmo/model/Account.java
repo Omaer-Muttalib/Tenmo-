@@ -15,8 +15,7 @@ public class Account {
 
 
    public Account() {
-    }
-
+   }
 
   public Account(int id, int userId, BigDecimal balance) {
         this.id = id;
@@ -24,11 +23,9 @@ public class Account {
         this.balance = balance;
    }
 
-
     public int getId() {
         return id;
     }
-
 
     public void setId(int id) {
         this.id = id;
@@ -58,6 +55,4 @@ public class Account {
                 ", balance=" + balance +
                 '}';
     }
-
-
 }

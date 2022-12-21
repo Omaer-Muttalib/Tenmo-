@@ -3,6 +3,7 @@ package com.techelevator.tenmo.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 public class Transfer {
@@ -17,6 +18,18 @@ public class Transfer {
     @JsonProperty("transfer_amount")
     private BigDecimal transferAmount;
     private String status;
+
+    public Transfer() {
+    }
+
+    public Transfer(int id, LocalDate date, String fromUsername, String toUsername, BigDecimal transferAmount, String status) {
+        this.id = id;
+        this.date = date;
+        this.fromUsername = fromUsername;
+        this.toUsername = toUsername;
+        this.transferAmount = transferAmount;
+        this.status = status;
+    }
 
     public int getId() {
         return id;
@@ -51,7 +64,7 @@ public class Transfer {
     }
 
     public BigDecimal getTransferAmount() {
-        return transferAmount;
+        return transferAmount.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setTransferAmount(BigDecimal transferAmount) {

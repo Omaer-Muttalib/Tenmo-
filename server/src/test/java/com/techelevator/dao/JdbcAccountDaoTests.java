@@ -1,15 +1,5 @@
 package com.techelevator.dao;
 
-<<<<<<< HEAD
-import org.junit.Test;
-
-public class JdbcAccountDaoTests {
-
-    //todo: integration tests
-
-    @Test
-    public
-=======
 import com.techelevator.tenmo.dao.JdbcAccountDao;
 import com.techelevator.tenmo.model.Account;
 import org.junit.Assert;
@@ -107,5 +97,5 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         Assert.assertEquals(expected.getBalance(), actual.getBalance());
     }
 
->>>>>>> 7e3aade9e3181d75461a4704037d97de5456215c
 }
+

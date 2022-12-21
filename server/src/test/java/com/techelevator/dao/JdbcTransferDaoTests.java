@@ -1,11 +1,5 @@
 package com.techelevator.dao;
 
-<<<<<<< HEAD
-import com.techelevator.tenmo.model.Transfer;
-import org.junit.Test;
-
-public class JdbcTransferDaoTests {
-=======
 import com.fasterxml.jackson.databind.ser.Serializers;
 import com.techelevator.tenmo.dao.JdbcTrasnferDao;
 import com.techelevator.tenmo.dao.JdbcUserDao;
@@ -15,21 +9,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
->>>>>>> 7e3aade9e3181d75461a4704037d97de5456215c
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-    @Test
-    public void getTransferTest() {
-        Transfer transfer1 = sut.getTransferbyId(0);
-
-    }
-
-=======
 public class JdbcTransferDaoTests extends BaseDaoTests {
 
     private static final Transfer TRANSFER_1 = new Transfer(3001, LocalDate.now(), "bob", "user", BigDecimal.valueOf(100.00).setScale(2), "Approved");
@@ -96,5 +81,4 @@ public class JdbcTransferDaoTests extends BaseDaoTests {
         Assert.assertEquals(expected.getTransferAmount(), actual.getTransferAmount());
         Assert.assertEquals(expected.getStatus(), actual.getStatus());
     }
->>>>>>> 7e3aade9e3181d75461a4704037d97de5456215c
 }
